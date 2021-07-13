@@ -6,20 +6,18 @@ function Pagination({ totalTasks, paginate }) {
     pageNumbers.push(i);
   }
 
-
   return (
-      <nav>
-        <ul className="pagination justify-content-center">
-          {
-            pageNumbers.map(number => (
-              <li key={number} className="page-item">
-                <a onClick={() => paginate(number)} className="page-link">{number}</a>
-              </li>
-            )
-            )
-          }
-        </ul>
-      </nav>
+    <nav>
+      <ul className="pagination justify-content-center">
+        {
+          pageNumbers.map(number => (
+            <li key={number} className="page-item">
+              <a onClick={() => paginate(number)} className="page-link">{number}</a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
   )
 }
 

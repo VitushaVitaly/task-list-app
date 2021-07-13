@@ -1,8 +1,7 @@
 const SET_TODO_ID = "SET_TODO_ID";
 const SET_TODO_STATUS = "SET_TODO_STATUS";
-const SET_TODO_TEXT = "SET_TODO_TEXT";
+const SET_TODO_EDITED_TEXT = "SET_TODO_EDITED_TEXT";
 const SET_TODO_COMPLETED = "SET_TODO_COMPLETED";
-
 
 const defaultState = {
   id: null,
@@ -23,7 +22,7 @@ export default function editTodoReducer(state = defaultState, action) {
         ...state,
         status: action.payload
       }
-    case SET_TODO_TEXT:
+    case SET_TODO_EDITED_TEXT:
       return {
         ...state,
         text: action.payload
@@ -41,4 +40,4 @@ export default function editTodoReducer(state = defaultState, action) {
 export const setTodoId = id => ({ type: SET_TODO_ID, payload: id });
 export const setTodoIsCompleted = isCompleted => ({ type: SET_TODO_COMPLETED, payload: isCompleted });
 export const setTodoStatus = status => ({ type: SET_TODO_STATUS, payload: status });
-export const setTodoText = text => ({ type: SET_TODO_TEXT, payload: text });
+export const setTodoText = text => ({ type: SET_TODO_EDITED_TEXT, payload: text });

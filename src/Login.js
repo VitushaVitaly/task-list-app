@@ -1,18 +1,18 @@
-import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setUsername,
-  setPassword,
-  setToken,
-  setAuthorized
+  setPassword
 } from "./reducers/user";
+import { setToken } from "./reducers/auth";
 import { Redirect } from "react-router";
+import { postLogin } from "./requests";
+import Popup from "./popup";
 
 function Login() {
   const dispatch = useDispatch();
   const username = useSelector(state => state.user.name);
   const password = useSelector(state => state.user.password);
-  const isAuthorized = useSelector(state => state.user.isAuthorized);
+  const token = useSelector(state => state.auth.token);
 
   const handleChange = (e) => {
     switch (e.currentTarget.name) {
@@ -22,30 +22,31 @@ function Login() {
       case 'password':
         dispatch(setPassword(e.currentTarget.value));
         break;
+      default:
+        break;
     }
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const form = new FormData();
-    form.append('username', username);
-    form.append('password', password);
-
-    axios.post('https://uxcandy.com/~shapoval/test-task-backend/v2/login?developer=Vitaly', form)
-      .then(function (response) {
-        console.log(response);
+    try {
+      const response = await postLogin(username, password);
+      if (response.data.status === "ok") {
         dispatch(setToken(response.data.message.token));
-        dispatch(setAuthorized(true));
-      })
-      .catch(function (error) {
-        console.error(`Error while fetchig data: ${error}`);
-      });
+      }
+      else {
+        Popup(response.data.message);
+      }
+    }
+    catch (error) {
+      console.error(`Error while fetchig data: ${error}`);
+    }
   }
 
   return (
     <div className="p-3 mt-3 border rounded-2 text-center">
-      {isAuthorized && <Redirect to="/" />}
+      {token && <Redirect to="/" />}
       <form className="" onSubmit={handleSubmit}>
         <div className="mb-3">
           <input
@@ -55,7 +56,7 @@ function Login() {
             type="text"
             autoComplete="username"
             onChange={handleChange}
-            placeholder="Логин"
+            placeholder="Имя пользователя"
           />
         </div>
         <div className="mb-3">

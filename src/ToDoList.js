@@ -1,7 +1,7 @@
 import ToDo from "./ToDo";
 import { useDispatch } from "react-redux";
 
-function ToDoList({ todos, handleToggle, setSortBy, setOrderBy }) {
+function ToDoList({ todos, setSortBy, setOrderBy }) {
   const dispatch = useDispatch();
 
   const handleChange = (e) => {
@@ -11,6 +11,8 @@ function ToDoList({ todos, handleToggle, setSortBy, setOrderBy }) {
         break;
       case "orderBy":
         dispatch(setOrderBy(e.currentTarget.value));
+        break;
+      default:
         break;
     }
   }
@@ -36,7 +38,6 @@ function ToDoList({ todos, handleToggle, setSortBy, setOrderBy }) {
               <ToDo
                 todo={todo}
                 key={todo.id}
-                toggleTask={handleToggle}
               />
             )
           })

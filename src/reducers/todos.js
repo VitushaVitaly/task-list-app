@@ -3,13 +3,15 @@ const SET_TOTAL_TODO = "SET_TOTAL_TODO";
 const SET_SORT_BY = "SET_SORT_BY";
 const SET_ORDER_BY = "SET_ORDER_BY";
 const SET_CURRENT_PAGE = "SET_CURRENT_PAGE";
+const SET_IS_LOADED = "SET_IS_LOADED";
 
 const defaultState = {
   list: [],
   total: 0,
   sortBy: "username",
   orderBy: "asc",
-  currentPage: 1
+  currentPage: 1,
+  isLoaded: false
 }
 
 export default function todosReducer(state = defaultState, action) {
@@ -39,6 +41,11 @@ export default function todosReducer(state = defaultState, action) {
         ...state,
         currentPage: action.payload
       }
+      case SET_IS_LOADED:
+      return {
+        ...state,
+        isLoaded: action.payload
+      }
     default:
       return state;
   }
@@ -49,3 +56,4 @@ export const setTotalTodo = total => ({ type: SET_TOTAL_TODO, payload: total });
 export const setSortBy = sortBy => ({ type: SET_SORT_BY, payload: sortBy });
 export const setOrderBy = orderBy => ({ type: SET_ORDER_BY, payload: orderBy });
 export const setCurrentPage = currentPage => ({ type: SET_CURRENT_PAGE, payload: currentPage });
+export const setIsLoaded = isLoaded => ({ type: SET_IS_LOADED, payload: isLoaded });

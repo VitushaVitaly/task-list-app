@@ -7,17 +7,14 @@ import {
 import Main from "./Main";
 import Login from "./Login";
 import { Provider, useSelector, useDispatch } from "react-redux";
-import { store } from "./reducers";
-import { setAuthorized, setToken } from "./reducers/user";
+import storage from "./reducers";
+import { setToken } from "./reducers/auth";
 
 const App = () => {
   const dispatch = useDispatch();
-  const isAuthorized = useSelector(state => state.user.isAuthorized);
+  const token = useSelector(state => state.auth.token);
 
-  const logout = () => {
-    dispatch(setToken(""));
-    dispatch(setAuthorized(false));
-  }
+  const logout = () => dispatch(setToken(""));
 
   return (
     <Router>
@@ -25,9 +22,9 @@ const App = () => {
         <ul className="nav justify-content-end">
           <li className="nav-item"><Link className="nav-link" to="/">Список задач</Link></li>
           {
-            !isAuthorized
-              ? <li className="nav-item"><Link className="nav-link" to="/login">Вход</Link></li>
-              : <li className="nav-item" onClick={logout}><Link className="nav-link" to="/">Выход</Link></li>
+            token
+              ? <li className="nav-item" onClick={logout}><Link className="nav-link" to="/">Выход</Link></li>
+              : <li className="nav-item"><Link className="nav-link" to="/login">Вход</Link></li>
           }
         </ul>
       </nav>
@@ -40,7 +37,54 @@ const App = () => {
   )
 }
 
+const loadState = () => {
+  try {
+    const serializedState = localStorage.getItem('state');
+    if (serializedState === null) {
+      return undefined;
+    }
+    return JSON.parse(serializedState);
+  } catch (err) {
+    return undefined;
+  }
+};
+
+const saveState = (state) => {
+  try {
+    const serializedState = JSON.stringify(state);
+    localStorage.setItem('state', serializedState);
+  } catch {
+    // ignore write errors
+  }
+};
+
 function AppWrapper() {
+  const store = storage();
+  store.subscribe(() => {
+    saveState({
+      token: store.getState().auth.token
+    });
+  });
+
+  const loadToken = () => {
+    const state = loadState();
+    if (state && state.token !== undefined) {
+      store.dispatch(setToken(state.token));
+    }
+  };
+
+  window.addEventListener("storage", (e) => {
+    if (!e.key || e.key !== "state")
+      return;
+
+    if (e.newValue === e.oldValue)
+      return;
+
+    loadToken();
+  }, false);
+
+  loadToken();
+
   return (
     <Provider store={store}>
       <div style={{ margin: "auto", width: "50%" }}>

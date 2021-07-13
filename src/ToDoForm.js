@@ -23,13 +23,14 @@ function ToDoForm({ addTask }) {
       case 'text':
         dispatch(setTodoText(value));
         break;
+      default:
+        break;
     }
   }
 
   const handleSubmit = (e) => {
     e.preventDefault();
     addTask(user, email, text);
-    dispatch(setTodoUsername(""));
   }
 
   return (
@@ -42,7 +43,7 @@ function ToDoForm({ addTask }) {
             value={user}
             type="text"
             onChange={handleChange}
-            placeholder="Имя"
+            placeholder="Имя пользователя"
           />
         </div>
         <div className="mb-3">
