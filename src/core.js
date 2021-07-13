@@ -10,4 +10,5 @@ export const fieldNames = {
   password: "Пароль",
   text: "Текст",
   email: "Email",
+  token: "Токен авторизации",
 };
